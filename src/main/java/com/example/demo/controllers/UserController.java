@@ -1,6 +1,8 @@
 package com.example.demo.controllers;
 
 import com.example.demo.models.User;
+import com.example.demo.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -9,22 +11,27 @@ import java.util.List;
 @RequestMapping(path = "/users")
 public class UserController {
 
+    UserService userService;
+    @Autowired
+    public UserController(UserService userService){
+        this.userService = userService;
+    }
 
     @GetMapping
     public List<User> getUsers(){
-        User user1 = new User(24, "bro", "hhh@gmail.com");
-        return List.of(user1);
+        return userService.getUsers();
+
     }
 
     @GetMapping(path = "/{id}")
     public User getUserbyId(@PathVariable String id){
-        return new User(id,"broooooooo", 24, "hhh@gmail.com");
+        return userService.getUserById(id);
 
     }
 
     @PostMapping
     public User createUser(@RequestBody User user){
-        return user;
+        return userService.createUser(user);
     }
 
     @GetMapping(path = "/hello")

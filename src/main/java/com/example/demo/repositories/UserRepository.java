@@ -4,11 +4,15 @@ import com.example.demo.models.User;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public class UserRepository {
@@ -20,11 +24,12 @@ public class UserRepository {
             File file = new ClassPathResource("users.json").getFile();
             List<User> users = objectMapper.readValue(file, new TypeReference<List<User>>() {});
             return users;
-        }catch (Exception _){
+        }catch (IOException e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to read users.json");
 
         }
 
-        return List.of();
     }
 
     public Optional<User> findById(String id){
@@ -33,13 +38,18 @@ public class UserRepository {
                     .filter(user -> user.getId().equals(id))
                     .findFirst();
 
-        }catch (Exception _){
-
+        }catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to read users.json");
         }
-        return null;
     }
 
-    // fadel save user
+    public User save(User user){
+        user.setId(UUID.randomUUID().toString());
+        return user;
+    }
+
+
 
 
 

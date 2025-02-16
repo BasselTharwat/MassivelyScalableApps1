@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @Service
 public class UserService {
+
     UserRepository userRepository;
 
     @Autowired
@@ -31,7 +32,8 @@ public class UserService {
         return optional.get();
     }
 
-    /*public User createUser(User user){
+    public User createUser(User user){
+        return userRepository.save(user);
       }
-    */
+
 }
