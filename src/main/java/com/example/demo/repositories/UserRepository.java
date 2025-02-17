@@ -10,6 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,20 +18,20 @@ import java.util.UUID;
 @Repository
 public class UserRepository {
 
-    public List<User> findAll(){
-        try{
+    public List<User> findAll() {
+        try {
             ObjectMapper objectMapper = new ObjectMapper();
-            String FILE_PATH = "src/main/resources/users.json";
-            File file = new ClassPathResource("users.json").getFile();
-            List<User> users = objectMapper.readValue(file, new TypeReference<List<User>>() {});
+            ClassPathResource resource = new ClassPathResource("users.json");
+            InputStream inputStream = resource.getInputStream();
+            List<User> users = objectMapper.readValue(inputStream,
+                    new TypeReference<List<User>>() {});
             return users;
-        }catch (IOException e) {
-            e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to read users.json");
-
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "File not found: " + e.getMessage());
         }
-
     }
+
 
     public Optional<User> findById(String id){
         try{

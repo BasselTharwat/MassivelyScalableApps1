@@ -53,6 +53,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>Lab2t23</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
